@@ -16,7 +16,7 @@ public class CommonReturnType {
     private Object data;
 
     public static CommonReturnType create(Object result){
-        return creat(result,"success");
+        return create(result,"success");
     }
 
     public static CommonReturnType create(Object result, String status){

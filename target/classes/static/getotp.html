@@ -43,7 +43,7 @@
 				contentType:"application/x-www-form-urlencoded",
 				url:"http://localhost:8080/seckill/getotp",
 				data:{
-					"telphone":$("#telphone").val(),
+					"telephone":$("#telephone").val(),
 				},
 				xhrFields:{withCredentials:true},
 				success:function(data){
@@ -60,8 +60,6 @@
 			});
 			return false;
 		});
-
-
 	});
 
 
