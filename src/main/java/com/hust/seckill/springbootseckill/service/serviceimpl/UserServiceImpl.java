@@ -55,8 +55,6 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
         }
 
-
-
         //实现model->dataobject方法
         UserDO userDO = convertFromModel(userModel);
         try{
@@ -64,8 +62,6 @@ public class UserServiceImpl implements UserService {
         }catch(DuplicateKeyException ex){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号已重复注册");
         }
-
-
 
         userModel.setId(userDO.getId());
 
@@ -78,7 +74,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException {
         //通过用户的手机获取用户信息
-        UserDO userDO = userDOMapper.selectByTelphone(telphone);
+        UserDO userDO = userDOMapper.selectByTelephone(telphone);
         if(userDO == null){
             throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
         }
