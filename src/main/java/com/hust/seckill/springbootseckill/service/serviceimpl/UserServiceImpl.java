@@ -10,6 +10,7 @@ import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.service.UserService;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
+import org.hibernate.validator.internal.engine.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel getUserById(Integer id) {
-        //调用userdomapper获取到对应的用户dataobject
+        //调用userDOmapper获取到对应的用户dataobject
         UserDO userDO = userDOMapper.selectByPrimaryKey(id);
         if(userDO == null){
             return null;
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void register(UserModel userModel) throws BusinessException {
+        //验证userModel是否为空
         if(userModel == null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
@@ -55,9 +57,11 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
         }
 
-        //实现model->dataobject方法
+        //将UserModel转换dataobject方法，将用户信息存储至数据库中
         UserDO userDO = convertFromModel(userModel);
+        //将UserDO保存至数据库中
         try{
+            //telephone字段为唯一性索引，使用try catch捕获重复插入异常
             userDOMapper.insertSelective(userDO);
         }catch(DuplicateKeyException ex){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号已重复注册");
@@ -65,6 +69,7 @@ public class UserServiceImpl implements UserService {
 
         userModel.setId(userDO.getId());
 
+        //将UserPasswordDO保存至数据库中
         UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
 
@@ -78,6 +83,7 @@ public class UserServiceImpl implements UserService {
         if(userDO == null){
             throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
         }
+        //获取用户密码信息并和用户信息一同合并为UserModel
         UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
         UserModel userModel = convertFromDataObject(userDO,userPasswordDO);
 
@@ -88,7 +94,7 @@ public class UserServiceImpl implements UserService {
         return userModel;
     }
 
-
+    //将UserModel转化为UserPasswordDO
     private UserPasswordDO convertPasswordFromModel(UserModel userModel){
         if(userModel == null){
             return null;
@@ -98,6 +104,8 @@ public class UserServiceImpl implements UserService {
         userPasswordDO.setUserId(userModel.getId());
         return userPasswordDO;
     }
+
+    //将UserModel转化为UserDO
     private UserDO convertFromModel(UserModel userModel){
         if(userModel == null){
             return null;
@@ -107,6 +115,8 @@ public class UserServiceImpl implements UserService {
 
         return userDO;
     }
+
+    //将UserPasswordDO和UserDO一同转化为UserModel
     private UserModel convertFromDataObject(UserDO userDO, UserPasswordDO userPasswordDO){
         if(userDO == null){
             return null;
