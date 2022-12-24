@@ -10,6 +10,8 @@ import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.service.UserService;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
+import com.hust.seckill.springbootseckill.validator.ValidationResult;
+import com.hust.seckill.springbootseckill.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -28,8 +30,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserPasswordDOMapper userPasswordDOMapper;
 
-//    @Autowired
-//    private ValidatorImpl validator;
+    @Autowired
+    private ValidatorImpl validator;
 
     @Override
     public UserModel getUserById(Integer id) {
@@ -51,11 +53,11 @@ public class UserServiceImpl implements UserService {
         if(userModel == null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
-//        //注册之前要对属性值进行合法性校验
-//        ValidationResult result =  validator.validate(userModel);
-//        if(result.isHasErrors()){
-//            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
-//        }
+        //注册之前要对属性值进行合法性校验
+        ValidationResult result =  validator.validate(userModel);
+        if(result.isHasErrors()){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
+        }
 
         //将UserModel转换dataobject方法，将用户信息存储至数据库中
         UserDO userDO = convertFromModel(userModel);
