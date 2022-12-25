@@ -10,13 +10,25 @@ import java.util.List;
  */
 public interface ItemService {
 
-    //创建商品
+    /**
+     * 创建商品
+     * @param itemModel
+     * @return
+     * @throws BusinessException
+     */
     ItemModel createItem(ItemModel itemModel) throws BusinessException;
 
-    //商品列表浏览
+    /**
+     * 浏览商品列表
+     * @return
+     */
     List<ItemModel> listItem();
 
-    //商品详情浏览
+    /**
+     * 浏览商品详情
+     * @param id
+     * @return
+     */
     ItemModel getItemById(Integer id);
 
 //    //库存扣减

@@ -1,6 +1,8 @@
 package com.hust.seckill.springbootseckill.service.serviceimpl;
 
+import com.hust.seckill.springbootseckill.dao.ItemDOMapper;
 import com.hust.seckill.springbootseckill.dao.ItemStockDOMapper;
+import com.hust.seckill.springbootseckill.dataobject.ItemDO;
 import com.hust.seckill.springbootseckill.dataobject.ItemStockDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
@@ -35,6 +37,7 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ItemStockDOMapper itemStockDOMapper;
 
+    //通过传入的ItemModel获得ItemDO
     private ItemDO convertItemDOFromItemModel(ItemModel itemModel){
         if(itemModel == null){
             return null;
@@ -44,6 +47,8 @@ public class ItemServiceImpl implements ItemService {
         itemDO.setPrice(itemModel.getPrice().doubleValue());
         return itemDO;
     }
+
+    //通过传入的ItemModel获得ItemStockDO
     private ItemStockDO convertItemStockDOFromItemModel(ItemModel itemModel){
         if(itemModel == null){
             return null;
@@ -54,19 +59,29 @@ public class ItemServiceImpl implements ItemService {
         return itemStockDO;
     }
 
+    //通过数据库中查询到的ItemDO和ItemStockDO获得ItemModel
+    private ItemModel convertModelFromDataObject(ItemDO itemDO,ItemStockDO itemStockDO){
+        ItemModel itemModel = new ItemModel();
+        BeanUtils.copyProperties(itemDO,itemModel);
+        itemModel.setPrice(new BigDecimal(itemDO.getPrice()));
+        itemModel.setStock(itemStockDO.getStock());
+
+        return itemModel;
+    }
+
     @Override
     @Transactional
     public ItemModel createItem(ItemModel itemModel) throws BusinessException {
-        //校验入参
+        //1.校验入参
         ValidationResult result = validator.validate(itemModel);
         if(result.isHasErrors()){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,result.getErrMsg());
         }
 
-        //转化itemmodel->dataobject
+        //2.转化itemmodel->dataobject
         ItemDO itemDO = this.convertItemDOFromItemModel(itemModel);
 
-        //写入数据库
+        //3.写入数据库
         itemDOMapper.insertSelective(itemDO);
         itemModel.setId(itemDO.getId());
 
@@ -78,16 +93,16 @@ public class ItemServiceImpl implements ItemService {
         return this.getItemById(itemModel.getId());
     }
 
-    @Override
-    public List<ItemModel> listItem() {
-        List<ItemDO> itemDOList = itemDOMapper.listItem();
-        List<ItemModel> itemModelList =  itemDOList.stream().map(itemDO -> {
-            ItemStockDO itemStockDO = itemStockDOMapper.selectByItemId(itemDO.getId());
-            ItemModel itemModel = this.convertModelFromDataObject(itemDO,itemStockDO);
-            return itemModel;
-        }).collect(Collectors.toList());
-        return itemModelList;
-    }
+//    @Override
+//    public List<ItemModel> listItem() {
+//        List<ItemDO> itemDOList = itemDOMapper.listItem();
+//        List<ItemModel> itemModelList =  itemDOList.stream().map(itemDO -> {
+//            ItemStockDO itemStockDO = itemStockDOMapper.selectByItemId(itemDO.getId());
+//            ItemModel itemModel = this.convertModelFromDataObject(itemDO,itemStockDO);
+//            return itemModel;
+//        }).collect(Collectors.toList());
+//        return itemModelList;
+//    }
 
     @Override
     public ItemModel getItemById(Integer id) {
@@ -98,45 +113,34 @@ public class ItemServiceImpl implements ItemService {
         //操作获得库存数量
         ItemStockDO itemStockDO = itemStockDOMapper.selectByItemId(itemDO.getId());
 
-
         //将dataobject->model
         ItemModel itemModel = convertModelFromDataObject(itemDO,itemStockDO);
 
-        //获取活动商品信息
-        PromoModel promoModel = promoService.getPromoByItemId(itemModel.getId());
-        if(promoModel != null && promoModel.getStatus().intValue() != 3){
-            itemModel.setPromoModel(promoModel);
-        }
+//        //获取活动商品信息
+//        PromoModel promoModel = promoService.getPromoByItemId(itemModel.getId());
+//        if(promoModel != null && promoModel.getStatus().intValue() != 3){
+//            itemModel.setPromoModel(promoModel);
+//        }
         return itemModel;
     }
 
-    @Override
-    @Transactional
-    public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
-        int affectedRow =  itemStockDOMapper.decreaseStock(itemId,amount);
-        if(affectedRow > 0){
-            //更新库存成功
-            return true;
-        }else{
-            //更新库存失败
-            return false;
-        }
+//    @Override
+//    @Transactional
+//    public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
+//        int affectedRow =  itemStockDOMapper.decreaseStock(itemId,amount);
+//        if(affectedRow > 0){
+//            //更新库存成功
+//            return true;
+//        }else{
+//            //更新库存失败
+//            return false;
+//        }
+//
+//    }
 
-    }
-
-    @Override
-    @Transactional
-    public void increaseSales(Integer itemId, Integer amount) throws BusinessException {
-        itemDOMapper.increaseSales(itemId,amount);
-    }
-
-    private ItemModel convertModelFromDataObject(ItemDO itemDO,ItemStockDO itemStockDO){
-        ItemModel itemModel = new ItemModel();
-        BeanUtils.copyProperties(itemDO,itemModel);
-        itemModel.setPrice(new BigDecimal(itemDO.getPrice()));
-        itemModel.setStock(itemStockDO.getStock());
-
-        return itemModel;
-    }
-
+//    @Override
+//    @Transactional
+//    public void increaseSales(Integer itemId, Integer amount) throws BusinessException {
+//        itemDOMapper.increaseSales(itemId,amount);
+//    }
 }

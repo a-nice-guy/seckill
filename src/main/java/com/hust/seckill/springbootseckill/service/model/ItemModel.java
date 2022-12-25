@@ -18,6 +18,7 @@ public class ItemModel {
     //商品价格
     @NotNull(message = "商品价格不能为空")
     @Min(value = 0,message = "商品价格必须大于0")
+    //double传到前端会有精度丢失问题
     private BigDecimal price;
 
     //商品的库存
