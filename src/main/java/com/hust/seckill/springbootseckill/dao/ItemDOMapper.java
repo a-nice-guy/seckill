@@ -1,6 +1,7 @@
 package com.hust.seckill.springbootseckill.dao;
 
 import com.hust.seckill.springbootseckill.dataobject.ItemDO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface ItemDOMapper {
 
     //获取Item list
     List<ItemDO> listItem();
+
+    int increaseSales(@Param("amount") Integer amount, @Param("id") Integer id);
 }

@@ -118,4 +118,10 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  <update id="increaseSales">
+    update item
+    set sales = #{amount} + sales
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
 </mapper>
