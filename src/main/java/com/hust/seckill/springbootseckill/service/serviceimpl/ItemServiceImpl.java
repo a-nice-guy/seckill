@@ -7,7 +7,9 @@ import com.hust.seckill.springbootseckill.dataobject.ItemStockDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.service.ItemService;
+import com.hust.seckill.springbootseckill.service.PromoService;
 import com.hust.seckill.springbootseckill.service.model.ItemModel;
+import com.hust.seckill.springbootseckill.service.model.PromoModel;
 import com.hust.seckill.springbootseckill.validator.ValidationResult;
 import com.hust.seckill.springbootseckill.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
@@ -31,8 +33,8 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ItemDOMapper itemDOMapper;
 
-//    @Autowired
-//    private PromoService promoService;
+    @Autowired
+    private PromoService promoService;
 
     @Autowired
     private ItemStockDOMapper itemStockDOMapper;
@@ -130,11 +132,11 @@ public class ItemServiceImpl implements ItemService {
         //将dataobject->model
         ItemModel itemModel = convertModelFromDataObject(itemDO,itemStockDO);
 
-//        //获取活动商品信息
-//        PromoModel promoModel = promoService.getPromoByItemId(itemModel.getId());
-//        if(promoModel != null && promoModel.getStatus().intValue() != 3){
-//            itemModel.setPromoModel(promoModel);
-//        }
+        //获取活动商品信息
+        PromoModel promoModel = promoService.getPromoByItemId(itemModel.getId());
+        if(promoModel != null && promoModel.getStatus().intValue() != 3){
+            itemModel.setPromoModel(promoModel);
+        }
         return itemModel;
     }
 
@@ -149,7 +151,6 @@ public class ItemServiceImpl implements ItemService {
             //更新库存失败
             return false;
         }
-
     }
 
     @Override
