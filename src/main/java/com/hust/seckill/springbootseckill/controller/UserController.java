@@ -86,7 +86,7 @@ public class UserController  extends BaseController {
         String newstr = base64en.encode(md5.digest(str.getBytes("utf-8")));
         return newstr;
     }
-    
+
     /**
      * 用户获取otp短信接口
      * @param telephone
@@ -127,7 +127,7 @@ public class UserController  extends BaseController {
             throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
         }
 
-        //讲核心领域模型用户对象转化为可供UI使用的viewobject
+        //将核心领域模型用户对象转化为可供UI使用的viewobject
         UserVO userVO  = convertFromModel(userModel);
 
         //返回通用对象

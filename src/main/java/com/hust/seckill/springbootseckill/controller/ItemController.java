@@ -11,6 +11,7 @@ import com.hust.seckill.springbootseckill.service.ItemService;
 import com.hust.seckill.springbootseckill.service.model.ItemModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,16 @@ public class ItemController extends BaseController {
     @Autowired
     private ItemService itemService;
 
-    //创建商品的controller
+    /**
+     * 创建商品
+     * @param title
+     * @param description
+     * @param price
+     * @param stock
+     * @param imgUrl
+     * @return
+     * @throws BusinessException
+     */
     @RequestMapping(value = "/create",method = {RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType createItem(@RequestParam(name = "title")String title,
@@ -47,7 +57,11 @@ public class ItemController extends BaseController {
         return CommonReturnType.create(itemVO);
     }
 
-    //商品详情页浏览
+    /**
+     * 商品详情页浏览
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/get",method = {RequestMethod.GET})
     @ResponseBody
     public CommonReturnType getItem(@RequestParam(name = "id")Integer id){
@@ -59,13 +73,16 @@ public class ItemController extends BaseController {
 
     }
 
-    //商品列表页面浏览
+    /**
+     * 获取商品列表
+     * @return
+     */
     @RequestMapping(value = "/list",method = {RequestMethod.GET})
     @ResponseBody
     public CommonReturnType listItem(){
         List<ItemModel> itemModelList = itemService.listItem();
 
-        //使用stream apiJ将list内的itemModel转化为ITEMVO;
+        //层层封装list，使用stream apiJ将list内的itemModel转化为ItemVO;
         List<ItemVO> itemVOList =  itemModelList.stream().map(itemModel -> {
             ItemVO itemVO = this.convertVOFromModel(itemModel);
             return itemVO;
@@ -73,8 +90,11 @@ public class ItemController extends BaseController {
         return CommonReturnType.create(itemVOList);
     }
 
-
-
+    /**
+     * 通过itemModel获得前端展示的ItemVO
+     * @param itemModel
+     * @return
+     */
     private ItemVO convertVOFromModel(ItemModel itemModel){
         if(itemModel == null){
             return null;

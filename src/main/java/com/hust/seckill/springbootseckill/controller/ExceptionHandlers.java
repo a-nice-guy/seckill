@@ -19,8 +19,8 @@ public class ExceptionHandlers {
     @ExceptionHandler(Exception.class)
     public Object handlerException(){
         Map<String,Object> responseData = new HashMap<>();
-        responseData.put("errorCode", EmBusinessError.UNKNOW_ERROR.getErrorCode());
-        responseData.put("errorMsg", EmBusinessError.UNKNOW_ERROR.getErrorMsg());
+        responseData.put("errorCode", EmBusinessError.UNKNOWN_ERROR.getErrorCode());
+        responseData.put("errorMsg", EmBusinessError.UNKNOWN_ERROR.getErrorMsg());
         CommonReturnType commonReturnType = new CommonReturnType();
         commonReturnType.setStatus("fail");
         commonReturnType.setData(responseData);
