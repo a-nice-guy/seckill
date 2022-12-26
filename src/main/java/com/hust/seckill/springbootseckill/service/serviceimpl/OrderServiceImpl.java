@@ -71,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
         }
 
-        //3.订单入库
+        //订单入库
         OrderModel orderModel = new OrderModel();
         orderModel.setUserId(userId);
         orderModel.setItemId(itemId);
@@ -84,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
         orderModel.setPromoId(promoId);
         orderModel.setOrderPrice(orderModel.getItemPrice().multiply(new BigDecimal(amount)));
 
-        //生成交易流水号,订单号
+        //4.生成交易流水号,订单号
         orderModel.setId(generateOrderNo());
         OrderDO orderDO = convertFromOrderModel(orderModel);
         orderDOMapper.insertSelective(orderDO);
@@ -121,7 +121,6 @@ public class OrderServiceImpl implements OrderService {
             stringBuilder.append(0);
         }
         stringBuilder.append(sequenceStr);
-
 
         //最后2位为分库分表位,暂时写死
         stringBuilder.append("00");
