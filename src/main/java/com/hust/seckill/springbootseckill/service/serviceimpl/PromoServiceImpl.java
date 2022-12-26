@@ -47,6 +47,7 @@ public class PromoServiceImpl implements PromoService {
         promoModel.setPromoItemPrice(new BigDecimal(promoDO.getPromoItemPrice()));
         promoModel.setStartDate(new DateTime(promoDO.getStartDate()));
         promoModel.setEndDate(new DateTime(promoDO.getEndDate()));
+        promoModel.setEndDate(new DateTime(promoDO.getEndDate()));
         return promoModel;
     }
 }
