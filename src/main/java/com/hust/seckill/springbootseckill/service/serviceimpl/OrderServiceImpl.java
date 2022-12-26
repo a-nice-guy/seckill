@@ -1,7 +1,9 @@
 package com.hust.seckill.springbootseckill.service.serviceimpl;
 
 import com.hust.seckill.springbootseckill.dao.OrderDOMapper;
+import com.hust.seckill.springbootseckill.dao.SequenceDOMapper;
 import com.hust.seckill.springbootseckill.dataobject.OrderDO;
+import com.hust.seckill.springbootseckill.dataobject.SequenceDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.service.ItemService;
@@ -20,14 +22,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Created by hzllb on 2018/11/18.
- */
 @Service
 public class OrderServiceImpl implements OrderService {
 
-//    @Autowired
-//    private SequenceDOMapper sequenceDOMapper;
+    @Autowired
+    private SequenceDOMapper sequenceDOMapper;
 
     @Autowired
     private ItemService itemService;
@@ -89,9 +88,9 @@ public class OrderServiceImpl implements OrderService {
         orderModel.setId(generateOrderNo());
         OrderDO orderDO = convertFromOrderModel(orderModel);
         orderDOMapper.insertSelective(orderDO);
-
-        //加上商品的销量
-        itemService.increaseSales(itemId,amount);
+//
+//        //加上商品的销量
+//        itemService.increaseSales(itemId,amount);
         //4.返回前端
         return orderModel;
     }
@@ -102,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    private String generateOrderNo(){
+    String generateOrderNo(){
         //订单号有16位
         StringBuilder stringBuilder = new StringBuilder();
         //前8位为时间信息，年月日
@@ -129,6 +128,12 @@ public class OrderServiceImpl implements OrderService {
 
         return stringBuilder.toString();
     }
+
+    /**
+     * 由orderModel获得OrderDO
+     * @param orderModel
+     * @return
+     */
     private OrderDO convertFromOrderModel(OrderModel orderModel){
         if(orderModel == null){
             return null;
