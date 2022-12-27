@@ -25,11 +25,11 @@ public class BaseController {
         Map<String,Object> responseData = new HashMap<>();
         if( ex instanceof BusinessException){
             BusinessException businessException = (BusinessException)ex;
-            responseData.put("errCode",businessException.getErrorCode());
-            responseData.put("errMsg",businessException.getErrorMsg());
+            responseData.put("errorCode",businessException.getErrorCode());
+            responseData.put("errorMsg",businessException.getErrorMsg());
         }else{
-            responseData.put("errCode", EmBusinessError.UNKNOWN_ERROR.getErrorCode());
-            responseData.put("errMsg",EmBusinessError.UNKNOWN_ERROR.getErrorMsg());
+            responseData.put("errorCode", EmBusinessError.UNKNOWN_ERROR.getErrorCode());
+            responseData.put("errorMsg",EmBusinessError.UNKNOWN_ERROR.getErrorMsg());
         }
         return CommonReturnType.create(responseData,"fail");
 
