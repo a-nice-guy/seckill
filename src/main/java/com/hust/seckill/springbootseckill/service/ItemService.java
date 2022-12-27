@@ -5,9 +5,6 @@ import com.hust.seckill.springbootseckill.service.model.ItemModel;
 
 import java.util.List;
 
-/**
- * Created by hzllb on 2018/11/18.
- */
 public interface ItemService {
 
     /**

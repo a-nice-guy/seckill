@@ -83,7 +83,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <update id="updateByPrimaryKey">
+  <update id="decreaseStock">
     update item_stock
     set stock = stock - #{amount}
     where item_id = #{itemId} and stock >= #{amount}

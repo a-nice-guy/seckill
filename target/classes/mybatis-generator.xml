@@ -36,11 +36,27 @@ serverTimezone=UTC"
         <!-- 逆向分析的表 -->
         <!-- tableName设置为*号，可以对应所有表，此时不写domainObjectName -->
         <!-- domainObjectName属性指定生成出来的实体类的类名 -->
-        <table tableName="user_info" domainObjectName="UserDO" enableCountByExample="false"
+<!--        <table tableName="user_info" domainObjectName="UserDO" enableCountByExample="false"
                 enableUpdateByExample="false" enableDeleteByExample="false"
                 enableSelectByExample="false" selectByExampleQueryId="false"/>
         <table tableName="user_password" domainObjectName="UserPasswordDO" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"/>-->
+<!--        <table tableName="item" domainObjectName="ItemDO" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"/>-->
+ <!--       <table tableName="item_stock" domainObjectName="ItemStockDO" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"/>-->
+<!--        <table tableName="order_info" domainObjectName="OrderDO" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"/>-->
+<!--        <table tableName="sequence_info" domainObjectName="SequenceDO" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" selectByExampleQueryId="false"/>-->
+        <table tableName="promo" domainObjectName="PromoDO" enableCountByExample="false"
+               enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false"/>
+
     </context>
 </generatorConfiguration>

@@ -21,9 +21,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Created by hzllb on 2018/11/18.
- */
 @Service
 public class ItemServiceImpl implements ItemService {
 
