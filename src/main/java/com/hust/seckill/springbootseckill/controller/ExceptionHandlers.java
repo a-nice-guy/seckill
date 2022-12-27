@@ -15,17 +15,17 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionHandlers {
 
-    //定义处理父类exception的方法
-    @ExceptionHandler(Exception.class)
-    public Object handlerException(){
-        Map<String,Object> responseData = new HashMap<>();
-        responseData.put("errorCode", EmBusinessError.UNKNOWN_ERROR.getErrorCode());
-        responseData.put("errorMsg", EmBusinessError.UNKNOWN_ERROR.getErrorMsg());
-        CommonReturnType commonReturnType = new CommonReturnType();
-        commonReturnType.setStatus("fail");
-        commonReturnType.setData(responseData);
-        return commonReturnType;
-    }
+//    //定义处理父类exception的方法
+//    @ExceptionHandler(Exception.class)
+//    public Object handlerException(){
+//        Map<String,Object> responseData = new HashMap<>();
+//        responseData.put("errorCode", EmBusinessError.UNKNOWN_ERROR.getErrorCode());
+//        responseData.put("errorMsg", EmBusinessError.UNKNOWN_ERROR.getErrorMsg());
+//        CommonReturnType commonReturnType = new CommonReturnType();
+//        commonReturnType.setStatus("fail");
+//        commonReturnType.setData(responseData);
+//        return commonReturnType;
+//    }
 
     //定义exceptionHandler处理controller层的exception
     @ExceptionHandler(BusinessException.class)

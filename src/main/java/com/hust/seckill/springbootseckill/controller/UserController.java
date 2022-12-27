@@ -89,7 +89,7 @@ public class UserController  extends BaseController {
      * @param telephone
      * @return
      */
-    @RequestMapping(value = "/getotp",method = {RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
+    @RequestMapping(value = "/getotp",method = {RequestMethod.GET},consumes={CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType getOtp(@RequestParam(name="telephone")String telephone){
 
