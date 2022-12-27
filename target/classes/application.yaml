@@ -1,7 +1,5 @@
 server:
-  port: 8080
-  servlet:
-    context-path: /seckill
+  port: 8090
 mybatis:
   mapper-locations: classpath:mapping/*.xml
 
