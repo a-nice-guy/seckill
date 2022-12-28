@@ -31,6 +31,20 @@ public class UserController  extends BaseController {
     private HttpServletRequest httpServletRequest;
 
     /**
+     * 将核心领域模型userModel转换为userVO模型
+     * @param userModel
+     * @return
+     */
+    private UserVO convertFromModel(UserModel userModel){
+        if(userModel == null){
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userModel,userVO);
+        return userVO;
+    }
+
+    /**
      * 用户注册接口
      * @param telephone
      * @param otpCode
@@ -131,20 +145,6 @@ public class UserController  extends BaseController {
         return CommonReturnType.create(userVO);
     }
 
-    /**
-     * 将核心领域模型userModel转换为userVO模型
-     * @param userModel
-     * @return
-     */
-    private UserVO convertFromModel(UserModel userModel){
-        if(userModel == null){
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(userModel,userVO);
-        return userVO;
-    }
-    
     /**
      * 用户登陆接口
      * @param telephone
