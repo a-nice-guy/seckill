@@ -31,7 +31,7 @@
 						g_itemList = data.data;
 						reloadDom();
 					}else{
-						alert("获取商品信息失败，原因为"+data.data.errMsg);
+						alert("获取商品信息失败，原因为"+data.data.errorMsg);
 					}
 				},
 				error:function(data){
@@ -47,9 +47,6 @@ function reloadDom(){
 		var itemVO = g_itemList[i];
 			var dom = "<div data-id='"+itemVO.id+"' id='itemDetail"+itemVO.id+"'><div class='form-group'><div><img style='width:200px;height:auto' src='"+itemVO.imgUrl+"'/></div></div><div class='form-group'><div><label class='control-label'>"+itemVO.title+"</label></div></div><div class='form-group'><label class='control-label'>价格</label><div><label class='control-label'>"+itemVO.price+"</label></div></div><div class='form-group'><label class='control-label'>销量</label><div><label class='control-label'>"+itemVO.sales+"</label></div></div></div>";
 
-
-
-
 		$(".content").append($(dom));
 
 		$("#itemDetail"+itemVO.id).on("click",function(e){
@@ -58,8 +55,6 @@ function reloadDom(){
 	}
 
 }
-
-
 </script>
 
 
