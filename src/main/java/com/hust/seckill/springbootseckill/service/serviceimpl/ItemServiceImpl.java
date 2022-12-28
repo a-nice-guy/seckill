@@ -153,6 +153,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void increaseSales(Integer itemId, Integer amount) throws BusinessException {
-        itemDOMapper.increaseSales(itemId,amount);
+        itemDOMapper.increaseSales(amount,itemId);
     }
 }

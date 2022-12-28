@@ -24,5 +24,6 @@ public interface ItemDOMapper {
     //获取Item list
     List<ItemDO> listItem();
 
+    //增加产品销量
     int increaseSales(@Param("amount") Integer amount, @Param("id") Integer id);
 }

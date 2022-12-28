@@ -101,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    String generateOrderNo(){
+    String generateOrderNo() throws BusinessException {
         //订单号有16位
         StringBuilder stringBuilder = new StringBuilder();
         //前8位为时间信息，年月日
@@ -113,6 +113,9 @@ public class OrderServiceImpl implements OrderService {
         //获取当前sequence
         int sequence = 0;
         SequenceDO sequenceDO =  sequenceDOMapper.getSequenceByName("order_info");
+        if (sequenceDO == null){
+            throw new BusinessException(EmBusinessError.TRANSACTION_CODE_ERROR,"订单号生成错误");
+        }
         sequence = sequenceDO.getCurrentValue();
         sequenceDO.setCurrentValue(sequenceDO.getCurrentValue() + sequenceDO.getStep());
         sequenceDOMapper.updateByPrimaryKeySelective(sequenceDO);
