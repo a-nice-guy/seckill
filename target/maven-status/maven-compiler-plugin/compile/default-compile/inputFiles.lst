@@ -21,6 +21,7 @@ D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckil
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dataobject\ItemDO.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\OrderService.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dao\ItemDOMapper.java
+D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\config\WebServerConfiguration.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dao\UserPasswordDOMapper.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\PromoService.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\UserService.java
