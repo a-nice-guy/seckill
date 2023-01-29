@@ -54,9 +54,9 @@ serverTimezone=UTC"
 <!--        <table tableName="sequence_info" domainObjectName="SequenceDO" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
                enableSelectByExample="false" selectByExampleQueryId="false"/>-->
-        <table tableName="promo" domainObjectName="PromoDO" enableCountByExample="false"
+<!--        <table tableName="promo" domainObjectName="PromoDO" enableCountByExample="false"
                enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false"/>
+               enableSelectByExample="false" selectByExampleQueryId="false"/>-->
 
     </context>
 </generatorConfiguration>
