@@ -34,6 +34,7 @@ D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckil
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dataobject\SequenceDO.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dao\PromoDOMapper.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\controller\view\UserVO.java
+D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\config\CorsConfig.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\controller\ItemController.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dao\ItemStockDOMapper.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dataobject\UserDO.java
