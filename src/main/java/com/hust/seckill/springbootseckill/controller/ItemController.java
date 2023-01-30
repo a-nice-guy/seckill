@@ -15,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Created by hzllb on 2018/11/18.
- */
 @Controller("/item")
 @RequestMapping("/item")
 public class ItemController extends BaseController {
