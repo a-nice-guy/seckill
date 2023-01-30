@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@CrossOrigin
+@CrossOrigin(allowCredentials = "true",originPatterns = "*")
 public class BaseController {
     public static final String CONTENT_TYPE_FORMED="application/x-www-form-urlencoded";
 

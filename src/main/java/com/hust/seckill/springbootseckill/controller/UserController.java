@@ -19,9 +19,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
+
 @Controller("user")
 @RequestMapping("/user")
-//@CrossOrigin(allowCredentials="true", allowedHeaders = "*")
 public class UserController  extends BaseController {
 
     @Autowired

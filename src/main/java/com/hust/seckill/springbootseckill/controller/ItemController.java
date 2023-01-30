@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller("/item")
 @RequestMapping("/item")
-//@CrossOrigin(origins = {"*"},allowCredentials = "true")
 public class ItemController extends BaseController {
 
     @Autowired
