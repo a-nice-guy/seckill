@@ -8,6 +8,7 @@ import com.hust.seckill.springbootseckill.service.UserService;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 @Controller("user")
@@ -29,6 +32,9 @@ public class UserController  extends BaseController {
 
     @Autowired
     private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 将核心领域模型userModel转换为userVO模型
@@ -167,10 +173,22 @@ public class UserController  extends BaseController {
 
         //用户登陆服务,用来校验用户登陆是否合法
         UserModel userModel = userService.validateLogin(telephone,this.EncodeByMd5(password));
-        //将登陆凭证加入到用户登陆成功的session内
-        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
-        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
 
-        return CommonReturnType.create(null);
+        //将登陆凭证加入到用户登陆成功的session内
+//        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
+//        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
+
+        //使用token+redis保存用户登录信息
+
+        //获取token,以uuid的形式
+        String uuidToken = UUID.randomUUID().toString();
+        uuidToken = uuidToken.replace("-","");
+
+        //建立token与用户登录态之间的联系
+        redisTemplate.opsForValue().set(uuidToken, userModel);
+        //设置过期时间
+        redisTemplate.expire(uuidToken,1, TimeUnit.HOURS);
+        //下发token
+        return CommonReturnType.create(uuidToken);
     }
 }

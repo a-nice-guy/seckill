@@ -4,10 +4,24 @@ server:
 mybatis:
   mapper-locations: classpath:mapping/*.xml
 
+
 spring:
+  #配置德鲁伊数据库连接池
   datasource:
     url: jdbc:mysql://localhost:3306/seckill?serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: wodehao323
     type: com.alibaba.druid.pool.DruidDataSource
+
+  #配置redis
+  redis:
+    host: 121.41.103.195
+    port: 6379
+    database: 10
+    password: sunjiawei323
+    #配置jedis连接池
+    jedis:
+      pool:
+        max-active: 50
+        min-idle: 20

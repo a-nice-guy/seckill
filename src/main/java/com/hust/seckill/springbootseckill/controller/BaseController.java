@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @CrossOrigin(allowCredentials = "true",originPatterns = "*")
+//@CrossOrigin(allowCredentials = "true",origins = "http://localhost")
 public class BaseController {
     public static final String CONTENT_TYPE_FORMED="application/x-www-form-urlencoded";
 
