@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.hust.seckill.springbootseckill.controller.view.ItemVO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.response.CommonReturnType;
+import com.hust.seckill.springbootseckill.service.CacheService;
 import com.hust.seckill.springbootseckill.service.ItemService;
 import com.hust.seckill.springbootseckill.service.model.ItemModel;
 import org.joda.time.format.DateTimeFormat;
@@ -26,6 +27,9 @@ public class ItemController extends BaseController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private CacheService cacheService;
 
     /**
      * 创建商品
@@ -67,14 +71,22 @@ public class ItemController extends BaseController {
     @ResponseBody
     public CommonReturnType getItem(@RequestParam(name = "id")Integer id){
 
-        //先在redis缓存中获取对应商品
-        ItemModel itemModel = (ItemModel) redisTemplate.opsForValue().get("item_" + id);
-        //若redis中不存在，则查询mysql
+        ItemModel itemModel = null;
+
+        //在本地缓存中获取数据
+        itemModel = (ItemModel) cacheService.getFromCommonCache("item_" + id);
         if (itemModel == null) {
-            itemModel = itemService.getItemById(id);
-            //将商品加入缓存
-            redisTemplate.opsForValue().set("item_" + id,itemModel);
-            redisTemplate.expire("item_" + id,10, TimeUnit.MINUTES);
+            //在redis缓存中获取对应商品
+            itemModel = (ItemModel) redisTemplate.opsForValue().get("item_" + id);
+            //若redis中不存在，则查询mysql
+            if (itemModel == null) {
+                itemModel = itemService.getItemById(id);
+                //将商品加入redis缓存
+                redisTemplate.opsForValue().set("item_" + id,itemModel);
+                redisTemplate.expire("item_" + id,10, TimeUnit.MINUTES);
+            }
+            //加入到本地缓存中
+            cacheService.setCommonCache("item_" + id,itemModel);
         }
 
         ItemVO itemVO = convertVOFromModel(itemModel);
