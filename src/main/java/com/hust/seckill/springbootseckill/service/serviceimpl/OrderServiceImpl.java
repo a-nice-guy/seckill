@@ -42,6 +42,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount) throws BusinessException {
         //1.校验下单状态,下单的商品是否存在，用户是否合法，购买数量是否正确
 //        ItemModel itemModel = itemService.getItemById(itemId);
+        //使用
         ItemModel itemModel = itemService.getItemByIdInCache(itemId);
 
         if(itemModel == null){
