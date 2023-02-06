@@ -45,4 +45,11 @@ public interface ItemService {
      */
     void increaseSales(Integer itemId,Integer amount)throws BusinessException;
 
+    /**
+     * 从redis缓存中获item和promo model缓存
+     * @param id
+     * @return
+     */
+    ItemModel getItemByIdInCache(Integer id);
+
 }

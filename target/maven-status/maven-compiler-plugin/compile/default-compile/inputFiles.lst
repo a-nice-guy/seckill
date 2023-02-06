@@ -25,6 +25,7 @@ D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckil
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\config\WebServerConfiguration.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dao\UserPasswordDOMapper.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\PromoService.java
+D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\serviceimpl\CacheServiceImpl.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\UserService.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\config\RedisConfig.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\model\OrderModel.java
@@ -36,6 +37,7 @@ D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckil
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dao\OrderDOMapper.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dataobject\OrderDO.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dataobject\SequenceDO.java
+D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\service\CacheService.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\dao\PromoDOMapper.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\controller\view\UserVO.java
 D:\software\java project\seckill\src\main\java\com\hust\seckill\springbootseckill\controller\ItemController.java
