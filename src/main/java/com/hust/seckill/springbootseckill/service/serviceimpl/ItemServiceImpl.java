@@ -6,6 +6,7 @@ import com.hust.seckill.springbootseckill.dataobject.ItemDO;
 import com.hust.seckill.springbootseckill.dataobject.ItemStockDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
+import com.hust.seckill.springbootseckill.mq.MqProducer;
 import com.hust.seckill.springbootseckill.service.ItemService;
 import com.hust.seckill.springbootseckill.service.PromoService;
 import com.hust.seckill.springbootseckill.service.model.ItemModel;
@@ -40,6 +41,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private MqProducer mqProducer;
 
     /**
      * 通过传入的ItemModel获得ItemDO
@@ -145,12 +149,21 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public boolean decreaseStock(Integer itemId, Integer amount) throws BusinessException {
-        int affectedRow =  itemStockDOMapper.decreaseStock(itemId,amount);
-        if(affectedRow > 0){
+//        int affectedRow =  itemStockDOMapper.decreaseStock(itemId,amount);
+        //在redis中减库存
+        Long increment = redisTemplate.opsForValue().increment("promo_item_stock_" + itemId, amount * -1);
+        if(increment >= 0){
             //更新库存成功
+            boolean result = mqProducer.asyncReduceStock(itemId, amount);
+            if (!result) {
+                //mq消息推送失败，补回库存
+                redisTemplate.opsForValue().increment("promo_item_stock_" + itemId,amount.intValue());
+                return false;
+            }
             return true;
         }else{
-            //更新库存失败
+            //更新库存失败,在redis中补回库存
+            redisTemplate.opsForValue().increment("promo_item_stock_" + itemId,amount.intValue());
             return false;
         }
     }

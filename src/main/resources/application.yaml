@@ -4,7 +4,6 @@ server:
 mybatis:
   mapper-locations: classpath:mapping/*.xml
 
-
 spring:
   #配置德鲁伊数据库连接池
   datasource:
@@ -25,3 +24,9 @@ spring:
       pool:
         max-active: 50
         min-idle: 20
+  main:
+    allow-circular-references: true
+mq:
+  nameserver:
+    addr: 47.98.47.156:9876
+  topicname: stock

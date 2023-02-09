@@ -10,6 +10,7 @@ import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.response.CommonReturnType;
 import com.hust.seckill.springbootseckill.service.CacheService;
 import com.hust.seckill.springbootseckill.service.ItemService;
+import com.hust.seckill.springbootseckill.service.PromoService;
 import com.hust.seckill.springbootseckill.service.model.ItemModel;
 import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +31,9 @@ public class ItemController extends BaseController {
 
     @Autowired
     private CacheService cacheService;
+
+    @Autowired
+    private PromoService promoService;
 
     /**
      * 创建商品
@@ -110,6 +114,14 @@ public class ItemController extends BaseController {
             return itemVO;
         }).collect(Collectors.toList());
         return CommonReturnType.create(itemVOList);
+    }
+
+    @GetMapping(value = "/publicPromo")
+    @ResponseBody
+    public CommonReturnType publicPromo(@RequestParam("id") Integer id) {
+        //调用service层缓存活动商品信息
+        promoService.publicPromo(id);
+        return CommonReturnType.create(null);
     }
 
     /**

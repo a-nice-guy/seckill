@@ -14,6 +14,7 @@ import com.hust.seckill.springbootseckill.service.model.OrderModel;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDOMapper orderDOMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     @Transactional
