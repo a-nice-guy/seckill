@@ -2,7 +2,9 @@ package com.hust.seckill.springbootseckill.controller;
 
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
+import com.hust.seckill.springbootseckill.mq.MqProducer;
 import com.hust.seckill.springbootseckill.response.CommonReturnType;
+import com.hust.seckill.springbootseckill.service.ItemService;
 import com.hust.seckill.springbootseckill.service.OrderService;
 import com.hust.seckill.springbootseckill.service.model.OrderModel;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
@@ -26,6 +28,12 @@ public class OrderController extends BaseController {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private MqProducer mqProducer;
+
+    @Autowired
+    private ItemService itemService;
 
     //封装下单请求
     @RequestMapping(value = "/createorder",method = {RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
@@ -51,7 +59,14 @@ public class OrderController extends BaseController {
             throw new BusinessException(EmBusinessError.USER_NOT_LOGIN,"用户还未登陆，不能下单");
         }
 
-        OrderModel orderModel = orderService.createOrder(userModel.getId(),itemId,promoId,amount);
+        //初始化库存流水信息
+        String stockLogId = itemService.initStockLog(itemId, amount);
+
+//        OrderModel orderModel = orderService.createOrder(userModel.getId(),itemId,promoId,amount);
+        boolean result = mqProducer.transactionAsyncReduceStock(userModel.getId(), itemId, promoId, amount, stockLogId);
+        if (result == false) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR,"下单失败");
+        }
 
         return CommonReturnType.create(null);
     }

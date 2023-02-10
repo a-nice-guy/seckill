@@ -2,8 +2,10 @@ package com.hust.seckill.springbootseckill.service.serviceimpl;
 
 import com.hust.seckill.springbootseckill.dao.ItemDOMapper;
 import com.hust.seckill.springbootseckill.dao.ItemStockDOMapper;
+import com.hust.seckill.springbootseckill.dao.StockLogDOMapper;
 import com.hust.seckill.springbootseckill.dataobject.ItemDO;
 import com.hust.seckill.springbootseckill.dataobject.ItemStockDO;
+import com.hust.seckill.springbootseckill.dataobject.StockLogDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.mq.MqProducer;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -44,6 +47,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private MqProducer mqProducer;
+
+    @Autowired
+    private StockLogDOMapper stockLogDOMapper;
 
     /**
      * 通过传入的ItemModel获得ItemDO
@@ -153,19 +159,26 @@ public class ItemServiceImpl implements ItemService {
         //在redis中减库存
         Long increment = redisTemplate.opsForValue().increment("promo_item_stock_" + itemId, amount * -1);
         if(increment >= 0){
-            //更新库存成功
-            boolean result = mqProducer.asyncReduceStock(itemId, amount);
-            if (!result) {
-                //mq消息推送失败，补回库存
-                redisTemplate.opsForValue().increment("promo_item_stock_" + itemId,amount.intValue());
-                return false;
-            }
             return true;
         }else{
             //更新库存失败,在redis中补回库存
-            redisTemplate.opsForValue().increment("promo_item_stock_" + itemId,amount.intValue());
+            increaseStock(itemId,amount);
             return false;
         }
+    }
+
+    @Override
+    public boolean asyncDecreaseStock(Integer itemId, Integer amount) {
+        //发送扣减库存异步消息
+        boolean result = mqProducer.asyncReduceStock(itemId, amount);
+        return result;
+    }
+
+    @Override
+//    @Transactional
+    public boolean increaseStock(Integer itemId, Integer amount) throws BusinessException {
+        redisTemplate.opsForValue().increment("promo_item_stock_" + itemId, amount.intValue());
+        return true;
     }
 
     @Override
@@ -184,5 +197,20 @@ public class ItemServiceImpl implements ItemService {
             redisTemplate.expire("item_validate_"+id,10, TimeUnit.MINUTES);
         }
         return itemModel;
+    }
+
+    @Override
+    @Transactional
+    public String initStockLog(Integer itemId, Integer amount) {
+        StockLogDO stockLogDO = new StockLogDO();
+        stockLogDO.setItemId(itemId);
+        stockLogDO.setAmount(amount);
+        stockLogDO.setStockLogId(UUID.randomUUID().toString().replace("-",""));
+        stockLogDO.setStatus(1);
+
+        //存入库存
+        stockLogDOMapper.insertSelective(stockLogDO);
+
+        return stockLogDO.getStockLogId();
     }
 }

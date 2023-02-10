@@ -2,8 +2,10 @@ package com.hust.seckill.springbootseckill.service.serviceimpl;
 
 import com.hust.seckill.springbootseckill.dao.OrderDOMapper;
 import com.hust.seckill.springbootseckill.dao.SequenceDOMapper;
+import com.hust.seckill.springbootseckill.dao.StockLogDOMapper;
 import com.hust.seckill.springbootseckill.dataobject.OrderDO;
 import com.hust.seckill.springbootseckill.dataobject.SequenceDO;
+import com.hust.seckill.springbootseckill.dataobject.StockLogDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.service.ItemService;
@@ -12,12 +14,15 @@ import com.hust.seckill.springbootseckill.service.UserService;
 import com.hust.seckill.springbootseckill.service.model.ItemModel;
 import com.hust.seckill.springbootseckill.service.model.OrderModel;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
+import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -41,9 +46,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private StockLogDOMapper stockLogDOMapper;
+
     @Override
     @Transactional
-    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount) throws BusinessException {
+    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount, String stockLogId) throws BusinessException {
         //1.校验下单状态,下单的商品是否存在，用户是否合法，购买数量是否正确
 //        ItemModel itemModel = itemService.getItemById(itemId);
         //使用
@@ -79,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
         }
 
-        //订单入库
+        //3.订单入库
         OrderModel orderModel = new OrderModel();
         orderModel.setUserId(userId);
         orderModel.setItemId(itemId);
@@ -99,7 +107,27 @@ public class OrderServiceImpl implements OrderService {
 //
         //加上商品的销量
         itemService.increaseSales(itemId,amount);
-        //4.返回前端
+//        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+//            @Override
+//            public void afterCommit() {
+//                //5.异步扣减库存
+//                boolean isSuccessful = itemService.asyncDecreaseStock(itemId, amount);
+////                if (!isSuccessful) {
+////                    //回补redis库存
+////                    itemService.increaseStock(itemId,amount);
+////                    throw new BusinessException(EmBusinessError.MQ_SEND_FAIL);
+////                }
+//            }
+//        });
+        //设置流水状态
+        StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
+        if (stockLogDO == null) {
+            throw new BusinessException(EmBusinessError.UNKNOWN_ERROR);
+        }
+        //设置交易状态已完成
+        stockLogDO.setStatus(2);
+        stockLogDOMapper.updateByPrimaryKey(stockLogDO);
+        //返回前端
         return orderModel;
     }
 
