@@ -58,7 +58,11 @@ public class OrderController extends BaseController {
         if (userModel == null) {
             throw new BusinessException(EmBusinessError.USER_NOT_LOGIN,"用户还未登陆，不能下单");
         }
-
+        //判断库存是否已经售罄，若售罄，则直接返回下单失败
+        Boolean isSoldOut = redisTemplate.hasKey("promo_item_stock_invalid_" + itemId);
+        if (isSoldOut) {
+            throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH);
+        }
         //初始化库存流水信息
         String stockLogId = itemService.initStockLog(itemId, amount);
 

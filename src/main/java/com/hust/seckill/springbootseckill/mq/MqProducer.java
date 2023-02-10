@@ -78,8 +78,8 @@ public class MqProducer {
                 //根据是否扣减库存成功，来判断要返回COMMIT,ROLLBACK还是继续UNKNOWN
                 String jsonString = new String(msg.getBody());
                 Map<String,Object>map = JSON.parseObject(jsonString, Map.class);
-                Integer itemId = (Integer) map.get("itemId");
-                Integer amount = (Integer) map.get("amount");
+//                Integer itemId = (Integer) map.get("itemId");
+//                Integer amount = (Integer) map.get("amount");
                 String stockLogId = (String) map.get("stockLogId");
                 StockLogDO stockLogDO = stockLogDOMapper.selectByPrimaryKey(stockLogId);
                 if(stockLogDO == null){
@@ -113,7 +113,6 @@ public class MqProducer {
                 JSON.toJSON(bodyMap).toString().getBytes(Charset.forName("UTF-8")));
         TransactionSendResult sendResult = null;
         try {
-
             sendResult = transactionMQProducer.sendMessageInTransaction(message,argsMap);
         } catch (MQClientException e) {
             e.printStackTrace();
