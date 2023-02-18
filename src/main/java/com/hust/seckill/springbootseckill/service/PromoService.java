@@ -9,4 +9,7 @@ public interface PromoService {
 
     //将活动商品加入缓存
     void publicPromo(Integer promoId);
+
+    //生成秒杀令牌
+    String generateSeckillToken(Integer promoId, Integer userId, Integer itemId);
 }

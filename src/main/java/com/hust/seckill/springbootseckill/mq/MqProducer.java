@@ -77,7 +77,7 @@ public class MqProducer {
             public LocalTransactionState checkLocalTransaction(MessageExt msg) {
                 //根据是否扣减库存成功，来判断要返回COMMIT,ROLLBACK还是继续UNKNOWN
                 String jsonString = new String(msg.getBody());
-                Map<String,Object>map = JSON.parseObject(jsonString, Map.class);
+                Map<String,Object> map = JSON.parseObject(jsonString, Map.class);
 //                Integer itemId = (Integer) map.get("itemId");
 //                Integer amount = (Integer) map.get("amount");
                 String stockLogId = (String) map.get("stockLogId");

@@ -54,14 +54,15 @@ public class OrderServiceImpl implements OrderService {
     public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount, String stockLogId) throws BusinessException {
         //1.校验下单状态,下单的商品是否存在，用户是否合法，购买数量是否正确
 //        ItemModel itemModel = itemService.getItemById(itemId);
-        //使用
+        //使用缓存查询商品信息
         ItemModel itemModel = itemService.getItemByIdInCache(itemId);
 
+/*
         if(itemModel == null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"商品信息不存在");
         }
-
 //        UserModel userModel = userService.getUserById(userId);
+        //使用缓存查询用户信息
         UserModel userModel = userService.getUserByIdInCache(userId);
         if(userModel == null){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"用户信息不存在");
@@ -69,7 +70,9 @@ public class OrderServiceImpl implements OrderService {
         if(amount <= 0 || amount > 99){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"数量信息不正确");
         }
+*/
 
+/*
         //校验活动信息
         if(promoId != null){
             //（1）校验对应活动是否存在这个适用商品
@@ -80,6 +83,7 @@ public class OrderServiceImpl implements OrderService {
                 throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"活动信息还未开始");
             }
         }
+*/
 
         //2.落单减库存
         boolean result = itemService.decreaseStock(itemId,amount);
