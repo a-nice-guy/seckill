@@ -1,6 +1,6 @@
 package com.hust.seckill.springbootseckill.dao;
 
-import com.hust.seckill.springbootseckill.DO.StockLogDO;
+import com.hust.seckill.springbootseckill.dataobject.StockLogDO;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,4 +1,4 @@
-package com.hust.seckill.springbootseckill.DO;
+package com.hust.seckill.springbootseckill.dataobject;
 
 public class OrderDO {
 

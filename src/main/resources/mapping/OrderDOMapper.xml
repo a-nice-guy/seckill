@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hust.seckill.springbootseckill.dao.OrderDOMapper">
-  <resultMap id="BaseResultMap" type="com.hust.seckill.springbootseckill.DO.OrderDO">
+  <resultMap id="BaseResultMap" type="com.hust.seckill.springbootseckill.dataobject.OrderDO">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="item_id" jdbcType="INTEGER" property="itemId" />
@@ -27,7 +27,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
 
-  <insert id="insert" parameterType="com.hust.seckill.springbootseckill.DO.OrderDO">
+  <insert id="insert" parameterType="com.hust.seckill.springbootseckill.dataobject.OrderDO">
     insert into order_info (id, user_id, item_id,
     promo_id, item_price, amount, order_price
       )
@@ -36,7 +36,7 @@
       )
   </insert>
 
-  <insert id="insertSelective" parameterType="com.hust.seckill.springbootseckill.DO.OrderDO">
+  <insert id="insertSelective" parameterType="com.hust.seckill.springbootseckill.dataobject.OrderDO">
     insert into order_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -86,7 +86,7 @@
     </trim>
   </insert>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.hust.seckill.springbootseckill.DO.OrderDO">
+  <update id="updateByPrimaryKeySelective" parameterType="com.hust.seckill.springbootseckill.dataobject.OrderDO">
     update order_info
     <set>
       <if test="userId != null">
@@ -111,7 +111,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-  <update id="updateByPrimaryKey" parameterType="com.hust.seckill.springbootseckill.DO.OrderDO">
+  <update id="updateByPrimaryKey" parameterType="com.hust.seckill.springbootseckill.dataobject.OrderDO">
     update order_info
     set user_id = #{userId,jdbcType=INTEGER},
       item_id = #{itemId,jdbcType=INTEGER},

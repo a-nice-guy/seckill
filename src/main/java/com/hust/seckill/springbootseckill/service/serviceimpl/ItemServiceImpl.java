@@ -3,9 +3,9 @@ package com.hust.seckill.springbootseckill.service.serviceimpl;
 import com.hust.seckill.springbootseckill.dao.ItemDOMapper;
 import com.hust.seckill.springbootseckill.dao.ItemStockDOMapper;
 import com.hust.seckill.springbootseckill.dao.StockLogDOMapper;
-import com.hust.seckill.springbootseckill.DO.ItemDO;
-import com.hust.seckill.springbootseckill.DO.ItemStockDO;
-import com.hust.seckill.springbootseckill.DO.StockLogDO;
+import com.hust.seckill.springbootseckill.dataobject.ItemDO;
+import com.hust.seckill.springbootseckill.dataobject.ItemStockDO;
+import com.hust.seckill.springbootseckill.dataobject.StockLogDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.rocketmq.MqProducer;
@@ -181,7 +181,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-//    @Transactional
+    @Transactional
     public boolean increaseStock(Integer itemId, Integer amount) throws BusinessException {
         redisTemplate.opsForValue().increment("promo_item_stock_" + itemId, amount.intValue());
         return true;

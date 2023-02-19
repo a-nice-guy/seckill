@@ -2,7 +2,7 @@ package com.hust.seckill.springbootseckill.rocketmq;
 
 import com.alibaba.fastjson.JSON;
 import com.hust.seckill.springbootseckill.dao.StockLogDOMapper;
-import com.hust.seckill.springbootseckill.DO.StockLogDO;
+import com.hust.seckill.springbootseckill.dataobject.StockLogDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.service.OrderService;
 import org.apache.rocketmq.client.exception.MQBrokerException;

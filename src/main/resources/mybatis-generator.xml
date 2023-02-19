@@ -17,7 +17,7 @@ serverTimezone=UTC"
                         password="wodehao323">
         </jdbcConnection>
         <!-- javaBean的生成策略-->
-        <javaModelGenerator targetPackage="com.hust.seckill.springbootseckill.DO"
+        <javaModelGenerator targetPackage="com.hust.seckill.springbootseckill.dataobject"
                             targetProject=".\src\main\java">
             <!--用于自动生成子包-->
             <property name="enableSubPackages" value="true" />

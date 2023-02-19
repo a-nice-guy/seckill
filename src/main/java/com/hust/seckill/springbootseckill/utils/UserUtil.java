@@ -1,8 +1,8 @@
 package com.hust.seckill.springbootseckill.utils;
 
 import com.hust.seckill.springbootseckill.controller.view.UserVO;
-import com.hust.seckill.springbootseckill.DO.UserDO;
-import com.hust.seckill.springbootseckill.DO.UserPasswordDO;
+import com.hust.seckill.springbootseckill.dataobject.UserDO;
+import com.hust.seckill.springbootseckill.dataobject.UserPasswordDO;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
 import org.springframework.beans.BeanUtils;
 
