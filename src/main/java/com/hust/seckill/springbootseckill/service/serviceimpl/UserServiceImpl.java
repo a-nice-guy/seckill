@@ -4,15 +4,16 @@ package com.hust.seckill.springbootseckill.service.serviceimpl;
 import com.alibaba.druid.util.StringUtils;
 import com.hust.seckill.springbootseckill.dao.UserDOMapper;
 import com.hust.seckill.springbootseckill.dao.UserPasswordDOMapper;
-import com.hust.seckill.springbootseckill.dataobject.UserDO;
-import com.hust.seckill.springbootseckill.dataobject.UserPasswordDO;
+import com.hust.seckill.springbootseckill.DO.UserDO;
+import com.hust.seckill.springbootseckill.DO.UserPasswordDO;
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.service.UserService;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
+import com.hust.seckill.springbootseckill.utils.MD5Util;
+import com.hust.seckill.springbootseckill.utils.UserUtil;
 import com.hust.seckill.springbootseckill.validator.ValidationResult;
 import com.hust.seckill.springbootseckill.validator.ValidatorImpl;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.TimeUnit;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService {
         //通过用户id获取对应的用户加密密码信息
         UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
 
-        return convertFromDataObject(userDO,userPasswordDO);
+        return UserUtil.convertFromDataObject(userDO,userPasswordDO);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //将UserModel转换dataobject方法，将用户信息存储至数据库中
-        UserDO userDO = convertFromModel(userModel);
+        UserDO userDO = UserUtil.convertUserDOFromModel(userModel);
         //将UserDO保存至数据库中
         try{
             //telephone字段为唯一性索引，使用try catch捕获重复插入异常
@@ -75,25 +77,26 @@ public class UserServiceImpl implements UserService {
         userModel.setId(userDO.getId());
 
         //将UserPasswordDO保存至数据库中
-        UserPasswordDO userPasswordDO = convertPasswordFromModel(userModel);
+        UserPasswordDO userPasswordDO = UserUtil.convertPasswordFromModel(userModel);
         userPasswordDOMapper.insertSelective(userPasswordDO);
 
         return;
     }
 
     @Override
-    public UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException {
+    public UserModel validateLogin(String telephone, String encrptPassword) throws BusinessException {
         //通过用户的手机获取用户信息
-        UserDO userDO = userDOMapper.selectByTelephone(telphone);
+        UserDO userDO = userDOMapper.selectByTelephone(telephone);
         if(userDO == null){
             throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
         }
         //获取用户密码信息并和用户信息一同合并为UserModel
         UserPasswordDO userPasswordDO = userPasswordDOMapper.selectByUserId(userDO.getId());
-        UserModel userModel = convertFromDataObject(userDO,userPasswordDO);
+        UserModel userModel = UserUtil.convertFromDataObject(userDO,userPasswordDO);
 
         //比对用户信息内加密的密码是否和传输进来的密码相匹配
-        if(!StringUtils.equals(encrptPassword,userModel.getEncryptPassword())){
+        String passwordWithSalt = MD5Util.inputPassToDbPass(encrptPassword, userModel.getSalt());
+        if(!StringUtils.equals(passwordWithSalt,userModel.getEncryptPassword())){
             throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
         }
         return userModel;
@@ -107,43 +110,6 @@ public class UserServiceImpl implements UserService {
             redisTemplate.opsForValue().set("user_validate_"+id,userModel);
             redisTemplate.expire("user_validate_"+id,10, TimeUnit.MINUTES);
         }
-        return userModel;
-    }
-
-    //将UserModel转化为UserPasswordDO
-    private UserPasswordDO convertPasswordFromModel(UserModel userModel){
-        if(userModel == null){
-            return null;
-        }
-        UserPasswordDO userPasswordDO = new UserPasswordDO();
-        userPasswordDO.setEncryptPassword(userModel.getEncryptPassword());
-        userPasswordDO.setUserId(userModel.getId());
-        return userPasswordDO;
-    }
-
-    //将UserModel转化为UserDO
-    private UserDO convertFromModel(UserModel userModel){
-        if(userModel == null){
-            return null;
-        }
-        UserDO userDO = new UserDO();
-        BeanUtils.copyProperties(userModel,userDO);
-
-        return userDO;
-    }
-
-    //将UserPasswordDO和UserDO一同转化为UserModel
-    private UserModel convertFromDataObject(UserDO userDO, UserPasswordDO userPasswordDO){
-        if(userDO == null){
-            return null;
-        }
-        UserModel userModel = new UserModel();
-        BeanUtils.copyProperties(userDO,userModel);
-
-        if(userPasswordDO != null){
-            userModel.setEncryptPassword(userPasswordDO.getEncryptPassword());
-        }
-
         return userModel;
     }
 }

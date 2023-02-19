@@ -36,4 +36,5 @@ public class UserModel implements Serializable {
     private String thirdPartyId;
     @NotBlank(message = "密码不可以为空")
     private String encryptPassword;
+    private String salt;
 }

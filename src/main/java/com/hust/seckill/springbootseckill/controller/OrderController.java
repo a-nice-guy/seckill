@@ -2,14 +2,12 @@ package com.hust.seckill.springbootseckill.controller;
 
 import com.hust.seckill.springbootseckill.error.BusinessException;
 import com.hust.seckill.springbootseckill.error.EmBusinessError;
-import com.hust.seckill.springbootseckill.mq.MqProducer;
+import com.hust.seckill.springbootseckill.rocketmq.MqProducer;
 import com.hust.seckill.springbootseckill.response.CommonReturnType;
 import com.hust.seckill.springbootseckill.service.ItemService;
 import com.hust.seckill.springbootseckill.service.OrderService;
 import com.hust.seckill.springbootseckill.service.PromoService;
-import com.hust.seckill.springbootseckill.service.model.OrderModel;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
-import io.netty.util.internal.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

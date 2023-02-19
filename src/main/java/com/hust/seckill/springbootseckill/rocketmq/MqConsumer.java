@@ -1,4 +1,4 @@
-package com.hust.seckill.springbootseckill.mq;
+package com.hust.seckill.springbootseckill.rocketmq;
 
 import com.alibaba.fastjson.JSON;
 import com.hust.seckill.springbootseckill.dao.ItemStockDOMapper;

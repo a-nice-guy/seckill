@@ -1,6 +1,6 @@
 package com.hust.seckill.springbootseckill.dao;
 
-import com.hust.seckill.springbootseckill.dataobject.PromoDO;
+import com.hust.seckill.springbootseckill.DO.PromoDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 

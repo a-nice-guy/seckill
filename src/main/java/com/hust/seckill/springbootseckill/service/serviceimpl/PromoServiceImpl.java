@@ -1,9 +1,7 @@
 package com.hust.seckill.springbootseckill.service.serviceimpl;
 
 import com.hust.seckill.springbootseckill.dao.PromoDOMapper;
-import com.hust.seckill.springbootseckill.dataobject.PromoDO;
-import com.hust.seckill.springbootseckill.error.BusinessException;
-import com.hust.seckill.springbootseckill.error.EmBusinessError;
+import com.hust.seckill.springbootseckill.DO.PromoDO;
 import com.hust.seckill.springbootseckill.service.ItemService;
 import com.hust.seckill.springbootseckill.service.PromoService;
 import com.hust.seckill.springbootseckill.service.UserService;

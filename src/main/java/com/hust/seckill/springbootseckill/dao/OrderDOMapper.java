@@ -1,6 +1,6 @@
 package com.hust.seckill.springbootseckill.dao;
 
-import com.hust.seckill.springbootseckill.dataobject.OrderDO;
+import com.hust.seckill.springbootseckill.DO.OrderDO;
 import org.springframework.stereotype.Repository;
 
 @Repository

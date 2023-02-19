@@ -1,6 +1,6 @@
 package com.hust.seckill.springbootseckill.dao;
 
-import com.hust.seckill.springbootseckill.dataobject.UserDO;
+import com.hust.seckill.springbootseckill.DO.UserDO;
 import org.springframework.stereotype.Repository;
 
 @Repository

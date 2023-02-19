@@ -6,11 +6,12 @@ import com.hust.seckill.springbootseckill.error.EmBusinessError;
 import com.hust.seckill.springbootseckill.response.CommonReturnType;
 import com.hust.seckill.springbootseckill.service.UserService;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
-import org.springframework.beans.BeanUtils;
+import com.hust.seckill.springbootseckill.utils.MD5Util;
+import com.hust.seckill.springbootseckill.utils.UserUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
 
@@ -21,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
 
 
 @Controller("user")
@@ -36,19 +38,6 @@ public class UserController  extends BaseController {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    /**
-     * 将核心领域模型userModel转换为userVO模型
-     * @param userModel
-     * @return
-     */
-    private UserVO convertFromModel(UserModel userModel){
-        if(userModel == null){
-            return null;
-        }
-        UserVO userVO = new UserVO();
-        BeanUtils.copyProperties(userModel,userVO);
-        return userVO;
-    }
 
     /**
      * 用户注册接口
@@ -72,8 +61,9 @@ public class UserController  extends BaseController {
                                      @RequestParam(name="age")Integer age,
                                      @RequestParam(name="password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
         //验证手机号和对应的otpcode相符合
-        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telephone);
-        if(!com.alibaba.druid.util.StringUtils.equals(otpCode,inSessionOtpCode)){
+//        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telephone);
+        String inRedisOtpCode = (String) redisTemplate.opsForValue().get("user_register_validationCode_" + telephone);
+        if(!StringUtils.equals(otpCode,inRedisOtpCode)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"短信验证码不符合");
         }
         //用户的注册流程
@@ -83,7 +73,9 @@ public class UserController  extends BaseController {
         userModel.setAge(age);
         userModel.setTelephone(telephone);
         userModel.setRegisterMode("byphone");
-        userModel.setEncryptPassword(this.EncodeByMd5(password));
+        String randomSalt = MD5Util.getRandomSalt();
+        userModel.setSalt(randomSalt);
+        userModel.setEncryptPassword(MD5Util.inputPassToDbPass(password,randomSalt));
         userService.register(userModel);
         return CommonReturnType.create(null);
     }
@@ -120,8 +112,11 @@ public class UserController  extends BaseController {
         String otpCode = String.valueOf(randomInt);
 
         //将OTP验证码同对应用户的手机号关联，使用httpsession的方式绑定他的手机号与OTPCODE
-        httpServletRequest.getSession().setAttribute(telephone,otpCode);
+//        httpServletRequest.getSession().setAttribute(telephone,otpCode);
 
+        //将用户申请的验证码存储至redis中
+        redisTemplate.opsForValue().set("user_register_validationCode_" + telephone,otpCode);
+        redisTemplate.expire("user_register_validationCode_" + telephone,5,TimeUnit.MINUTES);
         //将OTP验证码通过短信通道发送给用户,省略
         System.out.println("telephone = " + telephone + " & otpCode = "+otpCode);
         return CommonReturnType.create(null);
@@ -145,7 +140,7 @@ public class UserController  extends BaseController {
         }
 
         //将核心领域模型用户对象转化为可供UI使用的viewobject
-        UserVO userVO  = convertFromModel(userModel);
+        UserVO userVO  = UserUtil.convertUserVOFromModel(userModel);
 
         //返回通用对象
         return CommonReturnType.create(userVO);
@@ -166,13 +161,13 @@ public class UserController  extends BaseController {
                                   @RequestParam(name="password")String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
         //入参校验
-        if(org.apache.commons.lang3.StringUtils.isEmpty(telephone)||
+        if(StringUtils.isEmpty(telephone)||
                 StringUtils.isEmpty(password)){
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
 
         //用户登陆服务,用来校验用户登陆是否合法
-        UserModel userModel = userService.validateLogin(telephone,this.EncodeByMd5(password));
+        UserModel userModel = userService.validateLogin(telephone,password);
 
         //将登陆凭证加入到用户登陆成功的session内
 //        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);

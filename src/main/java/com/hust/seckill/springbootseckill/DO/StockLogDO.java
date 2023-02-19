@@ -1,4 +1,4 @@
-package com.hust.seckill.springbootseckill.dataobject;
+package com.hust.seckill.springbootseckill.DO;
 
 public class StockLogDO {
     /**
