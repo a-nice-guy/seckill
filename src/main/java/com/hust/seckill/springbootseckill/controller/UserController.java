@@ -7,6 +7,7 @@ import com.hust.seckill.springbootseckill.response.CommonReturnType;
 import com.hust.seckill.springbootseckill.service.UserService;
 import com.hust.seckill.springbootseckill.service.model.UserModel;
 import com.hust.seckill.springbootseckill.utils.MD5Util;
+import com.hust.seckill.springbootseckill.utils.RedisConstants;
 import com.hust.seckill.springbootseckill.utils.UserUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import static com.hust.seckill.springbootseckill.utils.RedisConstants.USER_LOGIN_TTL;
 
 
 @Controller("user")
@@ -182,7 +184,7 @@ public class UserController  extends BaseController {
         //建立token与用户登录态之间的联系
         redisTemplate.opsForValue().set(uuidToken, userModel);
         //设置过期时间
-        redisTemplate.expire(uuidToken,1, TimeUnit.HOURS);
+        redisTemplate.expire(uuidToken, USER_LOGIN_TTL, TimeUnit.HOURS);
         //下发token
         return CommonReturnType.create(uuidToken);
     }

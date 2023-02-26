@@ -71,7 +71,6 @@ public class OrderController extends BaseController {
             throw new BusinessException((EmBusinessError.PARAMETER_VALIDATION_ERROR),"生成令牌失败");
         }
 
-
         return CommonReturnType.create(promoToken);
     }
 

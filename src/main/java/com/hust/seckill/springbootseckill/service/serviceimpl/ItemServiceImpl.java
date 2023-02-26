@@ -167,7 +167,7 @@ public class ItemServiceImpl implements ItemService {
             //减库存成功
             return true;
         } else {
-            //更新库存失败,在redis中补回库存
+            //更新库存失败,在redis中补回库存（这里可能会出现少卖问题）
             increaseStock(itemId,amount);
             return false;
         }
