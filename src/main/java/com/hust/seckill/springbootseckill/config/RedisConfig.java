@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.hust.seckill.springbootseckill.serializer.JodaDateTimeJsonDeserializer;
 import com.hust.seckill.springbootseckill.serializer.JodaDateTimeJsonSerializer;
 import org.joda.time.DateTime;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -13,7 +17,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 public class RedisConfig {
     @Bean
@@ -42,5 +46,13 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
 
         return redisTemplate;
+    }
+    @Bean
+    public RedissonClient redissonClient() {
+        //配置类
+        Config config = new Config();
+        config.useSingleServer().setAddress("redis://121.41.103.195:6379").setPassword("sunjiawei323");
+        //创建客户端
+        return Redisson.create(config);
     }
 }
